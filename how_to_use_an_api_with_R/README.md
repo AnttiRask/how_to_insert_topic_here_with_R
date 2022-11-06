@@ -10,8 +10,8 @@ And when it comes to the code itself, I would like to replace the for loop in __
 
 
 ## DISCLAIMER!
-You need to open an account at https://openai.com/. And while there is a possibility for free credit when you start (at the time of writing $18 for three months), please notice that the requests are not free.
+You need to open an account with https://openai.com/. And while there is a possibility for free credit when you start (at the time of writing $18 for three months), please notice that the requests are not free.
 
 See the prices here: https://openai.com/api/pricing/. You can, of course, set a soft and a hard limit for usage per month.
 
-One last thing, you can do other things with the API. See the full documentation here: https://beta.openai.com/docs/introduction/overview
+One last thing, you can do other things with the API. See the full documentation here: https://beta.openai.com/docs/introduction/.
