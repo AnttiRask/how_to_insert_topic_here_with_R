@@ -15,11 +15,17 @@
 # One last thing, you can do other things with the API. See the full
 # documentation here: https://beta.openai.com/docs/introduction/overview
 
-## 1. Loading necessary libraries ----
+## 1. Loading necessary libraries and sourcing the secret ----
 library(conflicted) # just to check if there are any conflicting functions
 library(httr)       # for making the API request
 library(tidyverse)  # for everything else
 library(lubridate)  # for manipulating the time stamp
+
+# For obvious reasons I'm not storing my OpenAI API key on GitHub. All you
+# need to do is create a similar secret.R file and store the key there. And
+# don't forget to add a .gitignore file in the same directory and add secret.R
+# in it to keep your API key safe as well.
+source("how_to_use_an_api_with_R/secret.R")
 
 
 ## 2. Create the API POST request ----
@@ -27,7 +33,8 @@ library(lubridate)  # for manipulating the time stamp
 ### Insert the arguments ----
 
 # The text prompt. Explore! Examples: https://labs.openai.com/
-prompt  <- "A hand drawn sketch of a UFO"
+# prompt  <- "A hand drawn sketch of a UFO"
+prompt  <- "Living on the edge, digital art"
 
 # The number of images (1-10)
 n       <- 10
@@ -51,7 +58,7 @@ body    <- list(
 # that you get after signing up: https://beta.openai.com/account/api-keys
 request <- POST(
     url_api,
-    add_headers(Authorization = "Bearer OPENAI_API_KEY"),
+    add_headers(Authorization = str_glue("Bearer {OPENAI_API_KEY}")),
     body = body,
     encode = "json"
 )
@@ -99,7 +106,7 @@ for (i in seq_along(url_img)) {
 
     # Create the filename using dall-e, creation time stamp and a running number
     # at the end. Example."dall-e-2022-11-05-22-16-12-1.png"
-    destfile <- c(paste0("images/dall-e-", created, "-", i, ".png"))
+    destfile <- c(paste0("how_to_use_an_api_with_R/images/dall-e-", created, "-", i, ".png"))
 
     # Download the files mentioned in the url_img. Mode = "wb" is needed when
     # downloading binary files. Won't work without it.
@@ -123,7 +130,7 @@ metadata <- tibble(
 
 # We'll use one file for all of the images created with the same prompt.
 # By using a similar naming convention, you can easily find everything.
-file <- str_glue("images/dall-e-{created}.txt")
+file <- str_glue("how_to_use_an_api_with_R/images/dall-e-{created}.txt")
 
 # Write the file. Chose a txt file for the ease of use, but with the delimiters,
 # it's still easy enough to read in in a tabular format.
