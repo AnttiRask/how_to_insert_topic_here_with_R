@@ -33,8 +33,7 @@ source("how_to_use_an_api_with_R/secret.R")
 ### Insert the arguments ----
 
 # The text prompt. Explore! Examples: https://labs.openai.com/
-# prompt  <- "A hand drawn sketch of a UFO"
-prompt  <- "Living on the edge, digital art"
+prompt  <- "A hand drawn sketch of a UFO"
 
 # The number of images (1-10)
 n       <- 10
