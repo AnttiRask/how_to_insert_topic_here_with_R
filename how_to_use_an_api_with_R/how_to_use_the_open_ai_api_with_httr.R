@@ -104,7 +104,7 @@ url_img
 for (i in seq_along(url_img)) {
 
     # Create the filename using dall-e, creation time stamp and a running number
-    # at the end. Example."dall-e-2022-11-05-22-16-12-1.png"
+    # at the end. For example: "dall-e-2022-11-05-22-16-12-1.png"
     destfile <- c(paste0("how_to_use_an_api_with_R/images/dall-e-", created, "-", i, ".png"))
 
     # Download the files mentioned in the url_img. Mode = "wb" is needed when
