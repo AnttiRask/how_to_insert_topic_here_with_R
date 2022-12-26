@@ -33,11 +33,12 @@ source("how_to_use_an_api_with_R/secret.R")
 ### Insert the arguments ----
 
 # The text prompt. Explore! Examples: https://labs.openai.com/
-prompt  <- "A hand drawn sketch of a UFO"
+# prompt  <- "A hand drawn sketch of a UFO"
+prompt  <- "Create a scene that is set in a distant future or alternate universe, with fantastical elements that could not exist in our world. The scene should be colorful and imaginative, with strange landscapes, bizarre creatures, and otherworldly technology."
 
 # The number of images (1-10)
-n       <- 10
-
+# n       <- 10
+n       <- 4
 # Image size (256x256, 512x512, or 1024x1024 pixels)
 size    <- "1024x1024"
 
