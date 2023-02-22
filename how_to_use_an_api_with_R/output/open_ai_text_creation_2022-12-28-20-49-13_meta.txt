@@ -1,0 +1,2 @@
+created;model;prompt;n;max_tokens;temperature
+2022-12-28-20-49-13;text-davinci-003;Create an R script for scraping information from the wikipedia page about ChatGPT.;1;2048;0.9

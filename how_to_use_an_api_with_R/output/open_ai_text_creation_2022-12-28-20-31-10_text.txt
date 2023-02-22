@@ -1,0 +1,50 @@
+
+
+# Setting up packages that will be used for webscraping
+library(RCurl)
+library(XML)
+
+# Specify location of Spotify login page
+login.url <- "https://accounts.spotify.com/en/login"
+
+# Function to log into user account
+spotifyLogin <- function(username, password) {
+ 
+  # Create login page object
+  page <- getForm(login.url)
+  token <- page$url[ grepl("token", page$url) ]
+  
+  # Store user name and password in a list
+  login.creds <- list(username = username
+                        ,password = password
+                        ,token = token
+  )
+  
+  # POST login information
+  postForm(login.url, .params = login.creds)
+
+}
+
+# Start the login process by calling the function
+spotifyLogin("[Insert Username Here]", "[Insert Password Here]")
+
+# Get all charts from the Spotify landing page
+charts.url <- "https://open.spotify.com/browse/featured"
+chart.page <- readLines(charts.url, encoding="UTF-8")
+
+# Scrape the information from each chart
+chart.table <- mapply(function(x) {
+  htmlParse(chart.page[x])
+}, grep("preview-chart-item", chart.page))
+
+# Create a spreadsheet to store the scraped data
+ChartData <- data.frame(
+  TrackName = xmlValue(chart.table[[1]]), 
+  ArtistName = xmlValue(chart.table[[2]]), 
+  ReleaseDate = xmlValue(chart.table[[3]]), 
+  Genre = xmlValue(chart.table[[4]]),
+  stringsAsFactors=FALSE
+)
+
+# Export the data
+write.csv(ChartData, file = "Spotify Charts.csv")

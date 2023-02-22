@@ -1,0 +1,41 @@
+
+
+# Load required libraries
+library(rvest)
+library(magrittr)
+
+# Scrape the ChatGPT Wikipedia page
+# Create the url to access the page
+url <- paste0("https://en.wikipedia.org/wiki/ChatGPT")
+
+# Read the page content
+page <- read_html(url)
+
+# Extract page title
+page_title <- html_node(page, ".firstHeading") %>% html_text()
+
+# Extract the main content
+main_content <- html_node(page, "#mw-content-text")
+
+# Extract the summary paragraph
+summary_para <- html_node(main_content, ".mw-parser-output p") %>% html_text()
+
+# Extract the technology details
+tech_table <- html_node(main_content, "#mw-content-text > div > table:nth-child(7)")
+
+# Extract the headers from the technology table
+tech_headers <- html_nodes(tech_table, "th") %>% html_text()
+
+# Extract the row data from the technology table
+tech_data <- html_nodes(tech_table, "td") %>% html_text()
+
+# Create a data frame of technology details
+tech_details <- as.data.frame(matrix(tech_data, nrow=length(tech_headers), byrow=T))
+
+# Add the headers as the column names
+colnames(tech_details) <- tech_headers
+
+# Print the results
+print(page_title)
+print(summary_para)
+print(tech_details)

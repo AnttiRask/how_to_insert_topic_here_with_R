@@ -1,0 +1,2 @@
+created;model;prompt;n;max_tokens;temperature
+2022-12-26-19-19-09;text-davinci-003;Create an R script to draw a circle with ggplot2.;1;2048;0.5

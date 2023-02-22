@@ -1,0 +1,2 @@
+created;model;prompt;n;max_tokens;temperature
+2022-12-28-20-31-10;text-davinci-003;Create an R script for scraping chart information from the Spotify website (requires logging in).;1;2048;0.9

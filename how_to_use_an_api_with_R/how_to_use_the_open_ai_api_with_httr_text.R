@@ -1,4 +1,4 @@
-# Using the OpenAI API with {httr} to create pictures from a prompt ----
+# Using the OpenAI API with {httr} to create text (R code, for example) from a prompt ----
 
 # DISCLAIMER!
 #
@@ -25,34 +25,40 @@ library(lubridate)  # for manipulating the time stamp
 # need to do is create a similar secret.R file and store the key there. And
 # don't forget to add a .gitignore file in the same directory and add secret.R
 # in it to keep your API key safe as well.
-source("how_to_use_an_api_with_R/secret.R")
+source("../how_to_insert_topic_here_with_R/how_to_use_an_api_with_R/secret.R")
 
 
 ## 2. Create the API POST request ----
 
 ### Insert the arguments ----
 
-# The text prompt. Explore! Examples: https://labs.openai.com/
-# prompt  <- "A hand drawn sketch of a UFO"
-prompt  <- "The sound of music"
+# The text prompt. Explore!
+prompt      <- "A step-by-step framework for creating a data strategy."
 
-# The number of images (1-10)
-# n       <- 10
-n       <- 4
+# The number of texts
+n           <- 1
 
-# Image size (256x256, 512x512, or 1024x1024 pixels)
-size    <- "1024x1024"
+# Max number of tokens used
+max_tokens  <- 2048
+
+# Temperature (between 0 and 1 where 1 is most risky)
+temperature <- 0.9
+
+# Model used
+model       <- "text-davinci-003"
 
 ### Create the request ----
 
 # The URL for this particular use case (see documentation for others)
-url_api <- "https://api.openai.com/v1/images/generations"
+url_api <- "https://api.openai.com/v1/completions"
 
 # Gather the arguments as the body of the request
 body    <- list(
-    prompt = prompt,
-    n      = n,
-    size   = size
+    model       = model,
+    prompt      = prompt,
+    n           = n,
+    temperature = temperature,
+    max_tokens  = max_tokens
 )
 
 # For the request You need to replace the OPENAI_API_KEY with your own API key
@@ -83,7 +89,7 @@ tz <- "Europe/Helsinki"
 ### Created (time) ----
 created <- request %>%
     content() %>%
-    pluck(1) %>%
+    pluck(3) %>%
     as_datetime(tz = tz) %>%
     ymd_hms() %>%
     as.character() %>%
@@ -92,51 +98,41 @@ created <- request %>%
 created
 
 ### URL(s) - these will expire after an hour! ----
-url_img <- request %>%
+text <- request %>%
     content() %>%
-    pluck(2) %>%
+    pluck(5) %>%
     unlist() %>%
-    as.vector()
-url_img
+    as.vector() %>% 
+    pluck(1)
 
+text %>%
+    cat()
 
-## 6. Download the image(s) ----
+## 6. Save the text output in a txt file ----
+file_text <- str_glue("how_to_use_an_api_with_R/output/open_ai_text_creation_{created}_text.txt")
 
-### Use a for loop to go through each of the URLs in the url_img ----
-for (i in seq_along(url_img)) {
+text %>% cat(file = file_text)
+    
 
-    # Create the filename using dall-e, creation time stamp and a running number
-    # at the end. For example: "dall-e-2022-11-05-22-16-12-1.png"
-    destfile <- c(paste0("how_to_use_an_api_with_R/images/dall-e-", created, "-", i, ".png"))
+## 7. Save the metadata in a txt file ----
 
-    # Download the files mentioned in the url_img. Mode = "wb" is needed when
-    # downloading binary files. Won't work without it.
-    download.file(url_img[i], destfile, mode = "wb")
-
-}
-
-
-## 7. Write the metadata in a txt file ----
-
-# In case you want to know how a particular image was created or wish to use the
-# URL (for an hour, because it's gone after that), we'll gather all the info.
+# In case you want to know how a particular text output was created, we'll 
+# gather all the info.
 metadata <- tibble(
+    created,
+    model,
     prompt,
     n,
-    size,
-    created,
-    url_img,
-    destfile
+    max_tokens,
+    temperature
 )
 
-# We'll use one file for all of the images created with the same prompt.
-# By using a similar naming convention, you can easily find everything.
-file <- str_glue("how_to_use_an_api_with_R/images/dall-e-{created}.txt")
+file_meta <- str_glue("how_to_use_an_api_with_R/output/open_ai_text_creation_{created}_meta.txt")
 
 # Write the file. Chose a txt file for the ease of use, but with the delimiters,
 # it's still easy enough to read in in a tabular format.
 metadata %>%
     write_delim(
-        file  = file,
+        file  = file_meta,
         delim = ";"
     )

@@ -1,0 +1,16 @@
+
+
+# Load ggplot2 library
+library(ggplot2)
+
+# Create a dataframe with one row and two columns
+df <- data.frame(x=0, y=0)
+
+# Create a ggplot object using the dataframe
+ggplot(df, aes(x, y)) +
+
+# Add a geom_point layer to the ggplot object
+  geom_point(size=20, shape=21, fill="blue") +
+
+# Add a geom_circle layer to the ggplot object
+  geom_circle(radius=1, fill="red", color="black")

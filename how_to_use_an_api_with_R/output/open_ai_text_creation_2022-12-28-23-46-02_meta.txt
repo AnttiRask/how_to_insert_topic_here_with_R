@@ -1,0 +1,2 @@
+created;model;prompt;n;max_tokens;temperature
+2022-12-28-23-46-02;text-davinci-003;A step-by-step framework for creating a data strategy.;1;2048;0.9
