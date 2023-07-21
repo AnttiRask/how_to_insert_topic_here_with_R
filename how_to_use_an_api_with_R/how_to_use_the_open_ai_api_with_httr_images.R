@@ -17,9 +17,9 @@
 
 ## 1. Loading necessary libraries and sourcing the secret ----
 library(conflicted) # just to check if there are any conflicting functions
+conflict_prefer("seq_along", "purrr", "base")
 library(httr)       # for making the API request
 library(tidyverse)  # for everything else
-library(lubridate)  # for manipulating the time stamp
 
 # For obvious reasons I'm not storing my OpenAI API key on GitHub. All you
 # need to do is create a similar secret.R file and store the key there. And
@@ -34,7 +34,7 @@ source("how_to_use_an_api_with_R/secret.R")
 
 # The text prompt. Explore! Examples: https://labs.openai.com/
 # prompt  <- "A hand drawn sketch of a UFO"
-prompt  <- "The sound of music"
+prompt  <- "Avenue of mysteries"
 
 # The number of images (1-10)
 # n       <- 10
@@ -100,34 +100,43 @@ url_img <- request %>%
 url_img
 
 
-## 6. Download the image(s) ----
+## 6. Download the image(s) and write the metadata in a txt file ----
 
-### Use a for loop to go through each of the URLs in the url_img ----
-for (i in seq_along(url_img)) {
-
-    # Create the filename using dall-e, creation time stamp and a running number
-    # at the end. For example: "dall-e-2022-11-05-22-16-12-1.png"
-    destfile <- c(paste0("how_to_use_an_api_with_R/images/dall-e-", created, "-", i, ".png"))
-
-    # Download the files mentioned in the url_img. Mode = "wb" is needed when
-    # downloading binary files. Won't work without it.
-    download.file(url_img[i], destfile, mode = "wb")
-
-}
-
-
-## 7. Write the metadata in a txt file ----
-
-# In case you want to know how a particular image was created or wish to use the
-# URL (for an hour, because it's gone after that), we'll gather all the info.
-metadata <- tibble(
-    prompt,
-    n,
-    size,
-    created,
-    url_img,
-    destfile
-)
+# Metadata generation
+metadata <- url_img %>%
+    # Create a sequence from 1 to the length of 'url_img'
+    seq_along() %>%
+    # Use 'map2_df()' to apply a function to each element in the sequence and the corresponding URL in 'url_img'
+    map2_df(
+        # '.x' refers to the current element in the sequence
+        .x = .,
+        # '.y' refers to the current URL
+        .y = url_img,
+        # The function is specified using the '~' symbol
+        # It generates a filename, downloads the file, and returns a tibble
+        ~{
+            # Create the destination file name
+            destfile <- str_c(
+                "how_to_use_an_api_with_R/images/dall-e-",
+                created,
+                "-",
+                .x,
+                ".png"
+            )
+            
+            # Download the file at the current URL '.y' and save it to 'destfile'
+            download.file(.y, destfile, mode = "wb")
+            
+            # Create a one-row tibble with the metadata for the current file
+            tibble(
+                prompt   = prompt,     
+                n        = n,
+                size     = size,       
+                created  = created,
+                url_img  = .y,
+                destfile = destfile
+            )
+        })
 
 # We'll use one file for all of the images created with the same prompt.
 # By using a similar naming convention, you can easily find everything.
