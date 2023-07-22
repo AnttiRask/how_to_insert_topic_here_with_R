@@ -17,7 +17,7 @@
 
 ## 1. Loading necessary libraries and sourcing the secret ----
 library(conflicted) # just to check if there are any conflicting functions
-conflict_prefer("seq_along", "purrr", "base")
+    conflict_prefer("seq_along", "purrr", "base")
 library(httr)       # for making the API request
 library(tidyverse)  # for everything else
 
@@ -34,7 +34,7 @@ source("how_to_use_an_api_with_R/secret.R")
 
 # The text prompt. Explore! Examples: https://labs.openai.com/
 # prompt  <- "A hand drawn sketch of a UFO"
-prompt  <- "Avenue of mysteries"
+prompt  <- "Akira, digital art"
 
 # The number of images (1-10)
 # n       <- 10
@@ -89,16 +89,16 @@ created <- request %>%
     as.character() %>%
     str_replace_all("\\s", "-") %>%
     str_replace_all("\\:", "-")
+
 created
 
 ### URL(s) - these will expire after an hour! ----
 url_img <- request %>%
     content() %>%
     pluck(2) %>%
-    unlist() %>%
-    as.vector()
-url_img
+    unlist()
 
+url_img
 
 ## 6. Download the image(s) and write the metadata in a txt file ----
 
