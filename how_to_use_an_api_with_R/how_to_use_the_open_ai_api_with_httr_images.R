@@ -18,7 +18,7 @@
 ## 1. Loading necessary libraries and sourcing the secret ----
 library(conflicted) # just to check if there are any conflicting functions
     conflict_prefer("seq_along", "purrr", "base")
-library(httr)       # for making the API request
+library(httr2)       # for making the API request
 library(tidyverse)  # for everything else
 
 # For obvious reasons I'm not storing my OpenAI API key on GitHub. All you
@@ -34,7 +34,7 @@ source("how_to_use_an_api_with_R/secret.R")
 
 # The text prompt. Explore! Examples: https://labs.openai.com/
 # prompt  <- "A hand drawn sketch of a UFO"
-prompt  <- "Akira, digital art"
+prompt  <- "The art of statistics"
 
 # The number of images (1-10)
 # n       <- 10
@@ -46,7 +46,7 @@ size    <- "1024x1024"
 ### Create the request ----
 
 # The URL for this particular use case (see documentation for others)
-url_api <- "https://api.openai.com/v1/images/generations"
+url <- "https://api.openai.com/v1/images/generations"
 
 # Gather the arguments as the body of the request
 body    <- list(
@@ -57,12 +57,10 @@ body    <- list(
 
 # For the request You need to replace the OPENAI_API_KEY with your own API key
 # that you get after signing up: https://beta.openai.com/account/api-keys
-request <- POST(
-    url_api,
-    add_headers(Authorization = str_glue("Bearer {OPENAI_API_KEY}")),
-    body = body,
-    encode = "json"
-)
+request <- request(url) %>%
+    req_headers(Authorization = str_glue("Bearer {OPENAI_API_KEY}")) %>%
+    req_body_json(body) %>%
+    req_perform()
 
 
 ## 3. Check the request was successful (status code should be 200) ----
@@ -71,7 +69,7 @@ request$status_code
 
 ## 4. Let's take a look at the content ----
 request %>%
-    content() %>%
+    resp_body_json() %>% 
     glimpse()
 
 
@@ -82,7 +80,7 @@ tz <- "Europe/Helsinki"
 
 ### Created (time) ----
 created <- request %>%
-    content() %>%
+    resp_body_json() %>%
     pluck(1) %>%
     as_datetime(tz = tz) %>%
     ymd_hms() %>%
@@ -94,7 +92,7 @@ created
 
 ### URL(s) - these will expire after an hour! ----
 url_img <- request %>%
-    content() %>%
+    resp_body_json() %>%
     pluck(2) %>%
     unlist()
 
