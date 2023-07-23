@@ -5,7 +5,7 @@
 # You need to open an account at https://openai.com/.
 #
 # And while there is a possibility for free credit when you
-# start (at the time of writing $18 for three months), please notice that the
+# start (at the time of writing $5 for three months), please notice that the
 # requests are not free.
 #
 # See the prices here: https://openai.com/api/pricing/.
@@ -13,12 +13,12 @@
 # You can, of course, set a soft and a hard limit for usage per month.
 #
 # One last thing, you can do other things with the API. See the full
-# documentation here: https://beta.openai.com/docs/introduction/overview
+# documentation here: https://platform.openai.com/docs/introduction/overview
 
 ## 1. Loading necessary libraries and sourcing the secret ----
 library(conflicted) # just to check if there are any conflicting functions
     conflict_prefer("seq_along", "purrr", "base")
-library(httr2)       # for making the API request
+library(httr2)      # for making the API request
 library(tidyverse)  # for everything else
 
 # For obvious reasons I'm not storing my OpenAI API key on GitHub. All you
@@ -33,11 +33,9 @@ source("how_to_use_an_api_with_R/secret.R")
 ### Insert the arguments ----
 
 # The text prompt. Explore! Examples: https://labs.openai.com/
-# prompt  <- "A hand drawn sketch of a UFO"
-prompt  <- "The art of statistics"
+prompt  <- "Things the grandchildren should know"
 
 # The number of images (1-10)
-# n       <- 10
 n       <- 4
 
 # Image size (256x256, 512x512, or 1024x1024 pixels)
@@ -55,8 +53,8 @@ body    <- list(
     size   = size
 )
 
-# For the request You need to replace the OPENAI_API_KEY with your own API key
-# that you get after signing up: https://beta.openai.com/account/api-keys
+# For the request you need to replace the OPENAI_API_KEY with your own API key
+# that you get after signing up: https://platform.openai.com/account/api-keys
 request <- request(url) %>%
     req_headers(Authorization = str_glue("Bearer {OPENAI_API_KEY}")) %>%
     req_body_json(body) %>%
@@ -81,9 +79,8 @@ tz <- "Europe/Helsinki"
 ### Created (time) ----
 created <- request %>%
     resp_body_json() %>%
-    pluck(1) %>%
+    pluck("created") %>%
     as_datetime(tz = tz) %>%
-    ymd_hms() %>%
     as.character() %>%
     str_replace_all("\\s", "-") %>%
     str_replace_all("\\:", "-")
@@ -93,7 +90,7 @@ created
 ### URL(s) - these will expire after an hour! ----
 url_img <- request %>%
     resp_body_json() %>%
-    pluck(2) %>%
+    pluck("data") %>%
     unlist()
 
 url_img
@@ -140,7 +137,7 @@ metadata <- url_img %>%
 # By using a similar naming convention, you can easily find everything.
 file <- str_glue("how_to_use_an_api_with_R/images/dall-e-{created}.txt")
 
-# Write the file. Chose a txt file for the ease of use, but with the delimiters,
+# Write the file. Chose a .txt file for the ease of use, but with the delimiters,
 # it's still easy enough to read in in a tabular format.
 metadata %>%
     write_delim(
