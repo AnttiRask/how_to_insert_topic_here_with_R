@@ -33,7 +33,7 @@ source("how_to_use_an_api_with_R/secret.R")
 ### Insert the arguments ----
 
 # The text prompt. Explore! Examples: https://labs.openai.com/
-prompt  <- "Things the grandchildren should know"
+prompt  <- "Communication is key. Fantasy version."
 
 # The number of images (1-10)
 n       <- 4
