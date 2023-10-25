@@ -33,9 +33,7 @@ source("how_to_use_an_api_with_R/secret.R")
 ### Insert the arguments ----
 
 # The text prompt. Explore! Examples: https://labs.openai.com/
-
-# prompt  <- "A hand drawn sketch of a UFO"
-prompt  <- "Create an image illustrating the historical moment when the first domain name, Symbolics.com, was registered on March 15, 1985, by the computer manufacturer Symbolics. Depict a computer from the 1980s, the Symbolics logo, and the iconic domain name appearing on the screen, celebrating 'World Domain Day' and the birth of the internet's virtual real estate. Emphasize the revolutionary impact this event had on global communication, commerce, and society."
+prompt  <- "A hand drawn sketch of a UFO"
 
 # The number of images (1-10)
 n       <- 4
