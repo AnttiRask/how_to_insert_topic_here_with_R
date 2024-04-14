@@ -4,9 +4,7 @@
 #
 # You need to open an account at https://openai.com/.
 #
-# And while there is a possibility for free credit when you
-# start (at the time of writing $5 for three months), please notice that the
-# requests are not free.
+# Please notice that the requests are not free.
 #
 # See the prices here: https://openai.com/api/pricing/.
 #
@@ -17,11 +15,11 @@
 
 ## 1. Loading necessary libraries and sourcing the secret ----
 library(conflicted) # just to check if there are any conflicting functions
-    conflict_prefer("seq_along", "purrr", "base")
+    conflicts_prefer(purrr::seq_along)
 library(httr2)      # for making the API request
 library(tidyverse)  # for everything else
 
-# For obvious reasons I'm not storing my OpenAI API key on GitHub. All you
+# For obvious reasons I'm not including my OpenAI API in the code. All you
 # need to do is create a similar secret.R file and store the key there. And
 # don't forget to add a .gitignore file in the same directory and add secret.R
 # in it to keep your API key safe as well.
@@ -32,13 +30,18 @@ source("how_to_use_an_api_with_R/secret.R")
 
 ### Insert the arguments ----
 
-# The text prompt. Explore! Examples: https://labs.openai.com/
-prompt  <- "A hand drawn sketch of a UFO"
+# The model. Use Dall-E 3 for better quality, DALL-E 2 if you want more images.
+model   <- "dall-e-3"
+    
+# The text prompt. Explore!
+prompt  <- "With great power there must also come great responsibility!"
 
-# The number of images (1-10)
-n       <- 4
+# The number of images. 1 if you're using Dall-E 3, up to 10 with Dall-E 2
+n       <- 1
 
-# Image size (256x256, 512x512, or 1024x1024 pixels)
+# Image size:
+# 1024x1024, 1024x1792, or 1792x1024 when using Dall-E 3
+# 256x256, 512x512, or 1024x1024 pixels when using Dall-E 2
 size    <- "1024x1024"
 
 ### Create the request ----
@@ -48,6 +51,7 @@ url <- "https://api.openai.com/v1/images/generations"
 
 # Gather the arguments as the body of the request
 body    <- list(
+    model  = model,
     prompt = prompt,
     n      = n,
     size   = size
@@ -90,8 +94,7 @@ created
 ### URL(s) - these will expire after an hour! ----
 url_img <- request %>%
     resp_body_json() %>%
-    pluck("data") %>%
-    unlist()
+    pluck("data", 1, "url")
 
 url_img
 
