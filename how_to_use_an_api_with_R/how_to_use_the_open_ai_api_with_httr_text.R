@@ -4,9 +4,7 @@
 #
 # You need to open an account at https://openai.com/.
 #
-# And while there is a possibility for free credit when you
-# start (at the time of writing $5 for three months), please notice that the
-# requests are not free.
+# Please notice that the requests are not free.
 #
 # See the prices here: https://openai.com/api/pricing/.
 #
@@ -20,7 +18,7 @@ library(conflicted) # just to check if there are any conflicting functions
 library(httr2)      # for making the API request
 library(tidyverse)  # for everything else
 
-# For obvious reasons I'm not storing my OpenAI API key on GitHub. All you
+# For obvious reasons I'm not including my OpenAI API in the code. All you
 # need to do is create a similar secret.R file and store the key there. And
 # don't forget to add a .gitignore file in the same directory and add secret.R
 # in it to keep your API key safe as well.
@@ -30,6 +28,9 @@ source("../how_to_insert_topic_here_with_R/how_to_use_an_api_with_R/secret.R")
 ## 2. Create the API POST request ----
 
 ### Insert the arguments ----
+
+# Model used
+model       <- "gpt-3.5-turbo-instruct"
 
 # The text prompt. Explore!
 prompt      <- "A step-by-step outline for a comic book about Love and Rockets type of stories."
@@ -42,9 +43,6 @@ max_tokens  <- 4000
 
 # Temperature (between 0 and 1 where 1 is most risky)
 temperature <- 0.5
-
-# Model used
-model       <- "text-davinci-003"
 
 ### Create the request ----
 

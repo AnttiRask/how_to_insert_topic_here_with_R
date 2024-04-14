@@ -1,0 +1,2 @@
+created;model;prompt;n;max_tokens;temperature
+2024-04-14-17-48-53;gpt-3.5-turbo-instruct;A step-by-step outline for a comic book about Love and Rockets type of stories.;1;4000;0.5
