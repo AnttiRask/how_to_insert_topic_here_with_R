@@ -34,7 +34,7 @@ source("how_to_use_an_api_with_R/secret.R")
 model   <- "dall-e-3"
     
 # The text prompt. Explore!
-prompt  <- "With great power there must also come great responsibility!"
+prompt  <- "Avenue of mysteries"
 
 # The number of images. 1 if you're using Dall-E 3, up to 10 with Dall-E 2
 n       <- 1
@@ -91,12 +91,20 @@ created <- request %>%
 
 created
 
+### Revised prompt - we'll use this only for the metadata ----
+revised_prompt <- request %>%
+    resp_body_json() %>%
+    pluck("data", 1, "revised_prompt")
+
+revised_prompt
+
 ### URL(s) - these will expire after an hour! ----
 url_img <- request %>%
     resp_body_json() %>%
     pluck("data", 1, "url")
 
 url_img
+
 
 ## 6. Download the image(s) and write the metadata in a txt file ----
 
@@ -127,12 +135,13 @@ metadata <- url_img %>%
             
             # Create a one-row tibble with the metadata for the current file
             tibble(
-                prompt   = prompt,     
-                n        = n,
-                size     = size,       
-                created  = created,
-                url_img  = .y,
-                destfile = destfile
+                prompt         = prompt,
+                revised_prompt = revised_prompt,
+                n              = n,
+                size           = size,       
+                created        = created,
+                url_img        = .y,
+                destfile       = destfile
             )
         })
 
