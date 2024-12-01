@@ -34,7 +34,7 @@ source("how_to_use_an_api_with_R/secret.R")
 model   <- "dall-e-3"
     
 # The text prompt. Explore!
-prompt  <- "Avenue of mysteries"
+prompt  <- "A snowflake melting in a basement"
 
 # The number of images. 1 if you're using Dall-E 3, up to 10 with Dall-E 2
 n       <- 1
