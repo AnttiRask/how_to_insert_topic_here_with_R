@@ -10,12 +10,12 @@ con <- dbConnect(duckdb())
 # Read Parquet files directly using DuckDB ----
 products_tbl <- dbGetQuery(
   con,
-  "SELECT * FROM read_parquet('duckdb-shiny/products.parquet')"
+  "SELECT * FROM read_parquet('www/products.parquet')"
 )
 
 sales_tbl <- dbGetQuery(
   con,
-  "SELECT * FROM read_parquet('duckdb-shiny/sales.parquet')"
+  "SELECT * FROM read_parquet('www/sales.parquet')"
 )
 
 # Register DataFrames as tables
@@ -26,6 +26,18 @@ duckdb_register(con, "sales_table", sales_tbl)
 
 ## UI ----
 ui <- fluidPage(
+  tags$head(
+    # Bootstrap 3.4.1 CSS
+    tags$link(
+      rel = "stylesheet",
+      href = "https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css"
+    ),
+    tags$script(src = "https://code.jquery.com/jquery-3.6.0.min.js"),
+    tags$script(
+      src = "https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"
+    )
+  ),
+
   titlePanel("Sales Dashboard (R + Shiny + DuckDB)"),
 
   tabsetPanel(

@@ -22,5 +22,11 @@ products_data <- tibble(
 ) %>% mutate(product_id = product_id %>% as.integer)
 
 # Write to Parquet files
-write_parquet(sales_data, "duckdb-shiny/sales.parquet")
-write_parquet(products_data, "duckdb-shiny/products.parquet")
+write_parquet(
+  sales_data,
+  "how_to_use_duckdb_with_shiny_in_R/app/www/sales.parquet"
+)
+write_parquet(
+  products_data,
+  "how_to_use_duckdb_with_shiny_in_R/app/www/products.parquet"
+)
